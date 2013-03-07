@@ -1,0 +1,135 @@
+<!--  
+Exemple de définition d'un patron au format XML
+
+Les longueurs sont en mm.
+Codage en UTF8
+De préférence, mettre les tag en anglais (ce que je n'ai pas fait d'ailleurs)
+Note : chaque élément dispose de "meta-tag" permettant d'ajouter des attributs librement.
+
+"Design" : 
+C'est un ensemble d'un ou plusieurs patrons formant un ensemble.
+Les patrons ne sont jamais cousus entre eux (ex veste et jupe).
+	Note : comment traiter les ceintures ?
+Il dispose d'info sur son auteur, version, licence (car pas forcément libre de droits), limites de taille.
+	
+"Patern" : 
+Un "Patern" - Patron - est composé de plusieurs "piece" -Morceaux- cousus entre eux.
+- un repère pour placer le tissus sur un mannequin virtuel.
+- paramètres de couture (marge de couture, aisance)
+- Assemblage (en cours..)
+
+"Piece" : Morceau
+Un morceau est une découpe de tissu donnant un ou deux morceaux.
+	Le tissus plié en deux peux donner : 
+		- 2 morceaux identiques - sauf pour l'endroit du tissus -.
+		- 1 morceau symétrique par rapport à un axe - pas de découpe au niveau de la pliure -.
+		
+La découpe est déterminée par : 
+	- un premier point "repère" (décalage par rapport au repère de l'habit défini).
+	- un type de point "control"  servant uniquement à la construction
+	- un type de point "pattern" ou passeront les lignes de découpe.
+Chaque point est défini par rapport au repère ou à un autre point. 
+Les mesures sont disponibles sour la forme "m_<mesure>" et les paramètres du patron sous la forme "p_<paramètre>"
+Ex : 
+	<point name="B" type="control" : point "B" de type référence
+			rel="A" dx="m_tour_bassin/2"/> : il est décalé sur l'axe des x d'un demi tour de bassin par rapport à A
+
+	- Les lignes reliant les points : 
+		lignes droites (type "line") entre deux points définis
+		lignes courbes de type bezier (type "curve") entre deux points
+		Pour chacune, des paramètres type marge de couture etc...
+	- Les pinces - "dart" - (d'autres types sont à définir)
+		un type "standard" sur une ligne de coupe (ex haut de jupe)
+
+-->
+
+<design name="Nom">
+	<name lang="en_US">Name</name>
+	<author>Nom de l'auteur</author> <!-- Auteur du patron -->
+	<licence type="GPL">Trucs a propos de la licence</licence> 
+	<version>1.0</version> <!-- Version du patron -->
+	<size_limit metric="eu">36,38,40,42,44</size_limit> <!-- Limite de taille du patron -->
+	<description lang="fr">Jupe droite toute simple avec pinces</description>
+	<meta-tag name="style" lang="fr">XXème siècle</meta-tag>
+
+	<patern name="Jupe">
+		<name lang="en_US">skirt</name>
+		<info lang="fr_FR" default>Quelques informations</info>
+		<repere>taille_millieu</repere> <!-- ou placer le vêtement (pour représentation 2 ou 3D)-->
+		<param name="p_longueur">600</param> <!-- Parametres utilises dans les morceaux plus bas. Ici la longueur de la jupe -->
+		<aisance mesure="m_tour_bassin">10</aisance> <!-- aisance par défaut pour les mesures -->
+		<!-- Note : les marges de coutures peuvent également être spécifiées dans les "morceau" -->
+		<marge_couture>15</marge_couture> <!-- Marge de couture par défaut -->
+		<marge_couture type="ourlet">20</marge_couture> <!-- marge de couture pour un type spécifique -->
+
+		<piece name="jupe">
+			<fabric lang="fr">Type de tissu</fabric>
+			<duplicate>1</duplicate> <!-- Morceau découpé sur tissu plié en deux donnant deux morceaux distincts symétrique en mirroir -->			
+			<symetric point1="A" point2="D">0</symetric> <!-- Morceau découpé sur tissu plié : 
+				un morceau ayant une symétrie par rapport à l'axe défini. Le tissu doit donc être plié sur cet axe pour la découpe 
+				Note : ce n'est pas le cas ici, donc à 0 -->
+			<repere_x>0</repere_x> <!-- decalage par rapport au repere de l'habit -->
+			<repere_y>0</repere_y> <!-- decalage par rapport au repere de l'habit -->
+			<z_index>0</z_index> <!-- Pour représentation 0-255 : 0 : dessous, 255 : dessus -->
+			<droit_fil dx="0" dy="-1" /> <!-- Direction du droit fil -->
+			<points>
+				<point name="A" type="repere" constraint="none" x="10" y="10"/>
+				<point name="B" type="control" constraint="1point" node1="A" dx="m_tour_bassin/2"/>
+				<point name="B1" type="control" constraint="2points" node1="A" node2="B" prct="50"/>
+				<point name="B1" type="control" constraint="lineintersect" node1="line1" node2="line2" prct="50"/>
+				<point name="B1" type="control" constraint="mirror" node1="A" node2="line2"/>
+
+				<point name="C" type="control" rel="A" dx="m_tour_bassin/4-10"/>
+				<point name="D" type="pattern" rel="A" dy="-p_longueur"/>
+				<point name="E" type="pattern" rel="C" dy="-p_longueur"/>
+				<point name="F" type="pattern" rel="B" dy="-p_longueur"/>
+				<point name="H" type="pattern" rel="A" dy="-m_haut_bassin"/>
+				<point name="H1" type="pattern" rel="C" dy="-m_haut_bassin*2/3"/>
+				<point name="H2" type="pattern" rel="B" dy="-m_haut_bassin"/>			
+				<point name="L" type="pattern"	rel="C" dx="-(m_tour_bassin-m_tour_taille)/8"/>
+				<point name="J" type="pattern"	rel="C" dx="(m_tour_bassin-m_tour_taille)/8"/>
+				<point name="M" type="control"	rel="A" dx="(m_tour_bassin-m_tour_taille)/24"/>
+				<point name="P" type="pattern"	rel="M" dy="-15"/>
+				<point name="K" type="pattern"	rel="B" dy="-15"/>
+			</points>
+			<lines>
+				<line name="milieu dos" type="line" src="H" dst="D"/>
+				<line type="line" src="D" dst="F" marge_couture="ourlet"/>
+				<line name="milieu devant" type="line" src="F" dst="K"/>
+				<line name="lineA" type="curve" src="K" dst="J">
+					<type>cubic</type>
+					<point1 dx="20" dy="-20"/>
+					<point2 dx="20" dy="-20"/>
+				</line>
+				<line type="curve" src="J" dst="H1">
+					<type>cubic</type>
+					<point1 dx="20" dy="-20"/>
+					<point2 dx="20" dy="-20"/>
+				</line>			 
+				<line type="curve" src="H1" dst="L">
+					<type>cubic</type>
+					<point1 dx="20" dy="-20"/>
+					<point2 dx="20" dy="-20"/>
+				</line>			
+				<line name="lineB" type="curve" src="L" dst="P"/>
+				<line type="curve" src="P" dst="H">
+					<type>cubic</type>
+					<point1 dx="20" dy="-20"/>
+					<point2 dx="20" dy="-20"/>
+				</line>	
+			</lines>
+			<darts>
+				<dart type="standard" line="lineA" center="50" width="(m_tour_bassin-m_tour_taille)*0.06" height="120"/> <!-- Pince -->
+				<dart type="standard" line="lineB" rel="src" delta="m_ecart_poitrine/2" width="(m_tour_bassin-m_tour_taille)/10" height="90"/>
+			<!-- TODO : 
+				Placer plusieurs pinces si la différence taille/bassin (dans ce cas) est importante : codage ?
+				Types de pinces à étendre
+			-->
+			</darts>
+		</piece>
+		<assembly>
+			<!-- TODO -->
+		</assembly>
+	</patern>
+</design>
+

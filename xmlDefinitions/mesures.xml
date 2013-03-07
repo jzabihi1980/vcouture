@@ -1,0 +1,25 @@
+	<mesures>
+		<mesure name="m_tour_bassin">
+			<size metric="eu" value="36">880</size>
+			<size metric="us" value="XS">880</size>
+			<size metric="eu" value="38">920</size>
+			<size metric="eu" value="40">960</size>
+			<size metric="eu" value="42">1000</size>
+			<description lang="fr_fr">Tour de bassin</description>
+		</mesure>
+		<mesure name="m_tour_taille">
+			<size metric="eu" value="36">618</size>
+			<size metric="eu" value="38">652</size>
+			<size metric="eu" value="40">688</size>
+			<size metric="eu" value="42">726</size>
+			<description lang="fr_fr">Tour de taille</description>		
+		</mesure>
+		<mesure name="m_haut_bassin">
+			<size metric="eu" value="36">15</size> <!-- Note : valeurs au pif -->
+			<size metric="eu" value="38">15</size>
+			<size metric="eu" value="40">15</size>
+			<size metric="eu" value="42">15</size>
+			<description lang="fr_fr">Hauteur de bassin</description>		
+		</mesure>
+		
+	</mesures>
