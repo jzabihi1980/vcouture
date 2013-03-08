@@ -1,0 +1,33 @@
+<!--
+  exemple de system de profil
+  je pense que nous pouvons plus facilement gérer les profiles avec cette
+  enchainement.
+  Pas besoin d'annalyser tous le XML pour reconstruire les données.
+  la valeur de hauteur permetra d'avoir un parametre de calcule supplémentaire,
+  comme longueur d'une jupe "au dessus du genoux, mi cuisse..."
+  
+  l'intéré du profil et d'enregistrer celui de l'utilisateur.
+  
+  
+-->
+
+<?xml version="1.0" encoding="windows-1250"?>
+
+  <profil name="Std_Fr_38" metrics="eu" sexe="female" unite="mm">
+    <mesure name="m_bassin">
+      <tour name="m_tour_bassin">920</tour>
+      <hauteur name="m_haut_bassin">1100</hauteur>
+    </mesure>
+    <mesure name="m_taille">
+      <tour name="m_tour_taille">652</tour>
+      <hauteur name="m_haut_taille">1200</hauteur>
+    </mesure>
+    <mesure name="m_poitrine">
+      <tour name="m_tour_poitrine">920</tour>
+      <hauteur name="m_haut_poitrine">1600</hauteur>
+    </mesure>
+    <mesure name="m_genoux">
+      <tour name="m_tour_genoux">60</tour>
+      <hauteur name="m_haut_genoux">65</hauteur>
+    </mesure>
+  </profil>
